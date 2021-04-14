@@ -39,19 +39,6 @@ CREATE TABLE snp (
     FOREIGN KEY(SID) REFERENCES sample(SID),
     FOREIGN KEY(RPID) REFERENCES reference(RPID)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE snp (
-    SNPID int not null AUTO_INCREMENT,
-    SID int not null,
-    RPID int not null,
-    allele varchar(255) not null,
-    confidence int not null,
-    effect varchar(255), # snp effect
-    description varchar(255), # other info
-    PRIMARY KEY(SNPID),
-    FOREIGN KEY(SID) REFERENCES sample(SID),
-    FOREIGN KEY(RPID) REFERENCES reference(RPID)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
     
 CREATE TABLE reference (
     RPID int not null AUTO_INCREMENT,
