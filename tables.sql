@@ -13,6 +13,7 @@ CREATE TABLE population (
 CREATE TABLE goterm (
     GOID int not null AUTO_INCREMENT,
     name varchar(255) not null,
+    description varchar(500) not null,
     PRIMARY KEY(GOID)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

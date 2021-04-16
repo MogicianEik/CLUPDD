@@ -36,68 +36,60 @@ def read_vcf(vcf_file):
 # get all samples in this insert
 def get_samples(df):
     return sorted(list(set(list(df['sample']))))
-    
-    
-def insert_experiment(enotes): #TODO: make it mandatory on the html page
-    connection = pymysql.connect(db='group_C', user='test',
-                       passwd='test',
-                       port = 4253)
-    with connection.cursor() as cursor:
-        query = "INSERT INTO experiment(notes) VALUES ('{}')".format(notes)
-        cursor.execute(query)
-        connection.commit()
-        cursor.close()
-    connection.close()
 
-def insert_population(notes): #TODO: make it mandatory on the html page
+# TODO: on html cgi, check repeat insertion with the exsisiting data base, dump the repeat ones    
+def insert_goterm(go_file):
+    infile = open(go_file,'r')
     connection = pymysql.connect(db='group_C', user='test',
                        passwd='test',
                        port = 4253)
-    with connection.cursor() as cursor:
-        query = "INSERT INTO experiment(notes) VALUES ('{}')".format(notes)
+    cursor = connection.cursor()
+    for line in infile.readlines():
+        term = line[:10]
+        des = line[11:-1] # get rid of newlines in the goterm file
+        query = '''INSERT INTO goterm(name,description) VALUES ("{}","{}")'''.format(term,des) # tolerate ' in descriptions
         cursor.execute(query)
-        connection.commit()
-        cursor.close()
+    connection.commit()
+    cursor.close()
     connection.close()
+    infile.close()
     
-def insert_sample(identifier, enotes, pname, notes=''):
-    query1 = "SELECT PID FROM population WHERE name = '{}';".format(pname)
+# a huge insert, update all tables except goterm at one time
+def insert(df, enotes, pdic, ):
+    # order of insert, experiment(one time), population(in a loop), sample(in a loop), reference(in a loop), snp (huge loop), gene (in a loop), associate(in a loop), infunction(in a loop)
     connection = pymysql.connect(db='group_C', user='test',
                        passwd='test',
                        port = 4253)
-    with connection.cursor() as cursor:
-        cursor.execute(query1)
+    cursor = connection.cursor()
+    
+    # insert into experiment TODO: make notes mandatory on the html page
+    query = '''INSERT INTO experiment(notes) VALUES ("{}")'''.format(notes)
+    cursor.execute(query)
+    connection.commit()
+    
+    # insert into population TODO: pdic come from user input on the html page. pdic is a dictionary where keys are sample identifiers and values are which polutions they belong to and sample notes.
+    pnames = list(set([pdic[x][0] for x in pdic])) # remove repeats, pdic[x][1] is the note for that sample
+    for pname in pnames:
+        query = '''INSERT INTO population(name) VALUES ("{}")'''.format(pname)
+        cursor.execute(query)
+    cursor.commit()
+    
+    # insert into sample
+    query = '''SELECT EID FROM experiment WHERE notes = "{}";'''.format(enotes)
+    cursor.execute(query)
+    results = cursor.fetchall()
+    EID = results[0]
+    for sname in pdic:
+        query = '''SELECT PID FROM population WHERE name = "{}";'''.format(pdic[sname][0])
+        cursor.execute(query)
         results = cursor.fetchall()
         PID = results[0]
-        query2 = "INSERT INTO sample(PID, EID, identifier, notes) VALUES ({},{},'{}','{}')".format(PID,EID,identifier,notes)
-        cursor.execute(query2)
-        connection.commit()
-        cursor.close()
-    connection.close()
+        query = '''INSERT INTO sample(PID, EID, identifier, notes) VALUES ({},{},'{}','{}')'''.format(PID,EID,sname,pdic[sname][1])
+        cursor.execute(query)
+    connection.commit()
     
-# return insert querys TODO: on html cgi, check repeat insertion with the exsisiting data base, dump the repeat ones
-def get_go_terms(go_file):
-    terms = []
-    infile = open(go_file,'r')
-    for line in infile.readlines():
-        gos = line.split()[1]
-        go = gos.split(',')
-        for g in go:
-            terms.append(g)
-    return list(set(terms))
+    # insert into reference
     
-    
-def insert_goterm(terms):
-    connection = pymysql.connect(db='group_C', user='test',
-                       passwd='test',
-                       port = 4253)
-    with connection.cursor() as cursor:
-        for term in terms:
-            query = "INSERT INTO goterm(name) VALUES ('{}')".format(term)
-            cursor.execute(query)
-        connection.commit()
-        cursor.close()
-    connection.close()
     
 if __name__ == '__main__':
     df = read_vcf('Ros_FMNM_subset.snpeff.ann.ud0.vcf')
