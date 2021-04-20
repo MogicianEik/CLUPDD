@@ -6,26 +6,26 @@ import pymysql
 def read_vcf(vcf_file):
     vcf_reader = vcf.Reader(open(vcf_file))
     res=[]
-    cols = ['sample','REF','ALT','GQ','chrom', 'POS',
+    cols = ['sample','REF','ALT','GT','GQ','chrom','POS','FILTER',
              'var_type','sub_type','start','end','QUAL','INFO']
 
     for rec in vcf_reader:
-        x = [rec.CHROM, rec.POS, rec.var_type, rec.var_subtype, rec.start, rec.end, rec.QUAL, rec.INFO]
+        x = [rec.CHROM, rec.POS, rec.FILTER, rec.var_type, rec.var_subtype, rec.start, rec.end, rec.QUAL, rec.INFO]
         for sample in rec.samples:
             if sample.gt_bases == None:
                 #no call
                 mut=''
-                row = [sample.sample, rec.REF, sample.gt_bases, 0]
+                row = [sample.sample, rec.REF, sample.gt_bases, 0,0]
             elif rec.REF != sample.gt_bases:
                 mut = str(rec.end)+rec.REF+'>'+sample.gt_bases
                 cdata = sample.data
-                row = [sample.sample, rec.REF, sample.gt_bases, cdata[3]
+                row = [sample.sample, rec.REF, sample.gt_bases, cdata[0], cdata[3]
                       ] + x
             else:
                 #call is REF
                 mut = str(rec.end)+rec.REF              
                 cdata = sample.data
-                row = [sample.sample, rec.REF, sample.gt_bases, cdata[3],
+                row = [sample.sample, rec.REF, sample.gt_bases, cdata[0], cdata[3]
                       ] + x
 
             res.append(row)
@@ -53,10 +53,11 @@ def insert_goterm(go_file):
     cursor.close()
     connection.close()
     infile.close()
+
     
-# a huge insert, update all tables except goterm at one time
-def insert(df, enotes, pdic, ):
-    # order of insert, experiment(one time), population(in a loop), sample(in a loop), reference(in a loop), snp (huge loop), gene (in a loop), associate(in a loop), infunction(in a loop)
+# a huge insert, update all tables except goterm, gene at one time
+def insert(df, enotes, pdic):
+    # order of insert, experiment(one time), population(in a loop), sample(in a loop), reference(in a loop), snp (huge loop), snpeffect, have
     connection = pymysql.connect(db='group_C', user='test',
                        passwd='test',
                        port = 4253)
@@ -95,6 +96,72 @@ def insert(df, enotes, pdic, ):
         query = '''INSERT INTO reference(chromosome, position, allele) VALUES ("{}",{},"{}")'''.format(row['chrom'],int(row['POS']),row['REF'])
         cursor.execute(query)
     connection.commit()
+    
+    # insert into SNP, have, and snpeffect
+    snpeff = []
+    for index, row in df.iterrows():
+        # get the corresponding RPID 
+        query = '''SELECT RPID FROM reference WHERE chromosome = "{}" AND position = {} AND allele = "{}"'''.format(row['chrom'],int(row['POS']),row['REF'])
+        cursor.execute(query)
+        results = cursor.fetchall()
+        RPID = results[0]
+        # get all info for SNP
+        query = '''INSERT INTO snp(PRID,alt_allele,qual,filter,AC,AF,AN,baseQRankSum,clippingRankSum,DP,excessHet,FS,inbreedingCoeff,MLEAC,MLEAF,MQ,MQRankSum,QD,readPosRankSUM,SOR)
+                    VALUES({},"{}",{},"{}",{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{})'''.format(PRID,
+                    row['ALT'],
+                    float(row['QUAL']),
+                    row['FILTER'],
+                    row['INFO']['AC'][0],
+                    row['INFO']['AF'][0],
+                    row['INFO']['AN'],
+                    row['INFO']['BaseQRankSum'],
+                    row['INFO']['ClippingRankSum'],
+                    row['INFO']['DP'],
+                    row['INFO']['ExcessHet'],
+                    row['INFO']['FS'],
+                    row['INFO']['InbreedingCoeff'],
+                    row['INFO']['MLEAC'][0],
+                    row['INFO']['MLEAF'][0],
+                    row['INFO']['MQ'],
+                    row['INFO']['MQRankSum'],
+                    row['INFO']['QD'],
+                    row['INFO']['ReadPosRankSum'],
+                    row['INFO']['SOR'])
+        
+        cursor.execute(query)
+        connection.commit()
+        # get the id of what just inserted
+        cursor.execute('''SELECT LAST_INSERT_ID();''')
+        results = cursor.fetchall()
+        SNPID = results[0]
+        # insert into snpeffect
+        for allele in row['INFO']['ANN']:
+            query = '''INSERT INTO snpeffect(SNPID,allele,effect,impact,gene_name,feature_type,transcript_biotype,ranktotal,HGVSc,HGVSp,cDNA_positioncDNA_length,Protein_positionProtein_length,warnings)
+                        VALUES({},"{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}","{}")'''.format(SNPID,
+                        allele.split('|')[0],
+                        allele.split('|')[1],
+                        allele.split('|')[2],
+                        allele.split('|')[3],
+                        allele.split('|')[5],
+                        allele.split('|')[7],
+                        allele.split('|')[8],
+                        allele.split('|')[9],
+                        allele.split('|')[10],
+                        allele.split('|')[11],
+                        allele.split('|')[13],
+                        allele.split('|')[14])
+            cursor.execute(query)
+        connection.commit()
+        # insert into have
+        # get SID
+        query = '''SELECT SID FROM sample WHERE EID = {} AND identifier = "{}"'''.format(EID,row['sample'])
+        cursor.execute(query)
+        results = cursor.fetchall()
+        SID = results[0]
+        query = '''INSERT INTO have(SID,SNPID,GT,GQ) VALUES({},{},"{}",{})'''.format(SID,SNPID,row['GT'],row['GQ'])
+        cursor.execute(query)
+        connection.commit()
+    connection.close()
     
 if __name__ == '__main__':
     df = read_vcf('Ros_FMNM_subset.snpeff.ann.ud0.vcf')
