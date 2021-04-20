@@ -6,11 +6,11 @@ import pymysql
 def read_vcf(vcf_file):
     vcf_reader = vcf.Reader(open(vcf_file))
     res=[]
-    cols = ['sample','REF','ALT','GQ','chrom',
+    cols = ['sample','REF','ALT','GQ','chrom', 'POS',
              'var_type','sub_type','start','end','QUAL','INFO']
 
     for rec in vcf_reader:
-        x = [rec.CHROM, rec.var_type, rec.var_subtype, rec.start, rec.end, rec.QUAL, rec.INFO]
+        x = [rec.CHROM, rec.POS, rec.var_type, rec.var_subtype, rec.start, rec.end, rec.QUAL, rec.INFO]
         for sample in rec.samples:
             if sample.gt_bases == None:
                 #no call
@@ -89,7 +89,12 @@ def insert(df, enotes, pdic, ):
     connection.commit()
     
     # insert into reference
-    
+    temp = df[['REF','chrom','POS']] #subset a tmp df to extract ref info
+    temp.drop_duplicates(inplace=True)
+    for index, row in temp.iterrows():
+        query = '''INSERT INTO reference(chromosome, position, allele) VALUES ("{}",{},"{}")'''.format(row['chrom'],int(row['POS']),row['REF'])
+        cursor.execute(query)
+    connection.commit()
     
 if __name__ == '__main__':
     df = read_vcf('Ros_FMNM_subset.snpeff.ann.ud0.vcf')

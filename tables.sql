@@ -85,7 +85,7 @@ CREATE TABLE have (
 
 CREATE TABLE reference (
     RPID int not null AUTO_INCREMENT,
-    chromosome varchar(4) not null,
+    chromosome varchar(255) not null,
     position int not null,
     allele varchar(1) not null,
     PRIMARY KEY(RPID)
@@ -93,6 +93,7 @@ CREATE TABLE reference (
 
 CREATE TABLE gene (
     GID int not null AUTO_INCREMENT,
+<<<<<<< Updated upstream
     chromosome_number int not null,
     start_position int not null,
     end_position int not null,
@@ -106,6 +107,16 @@ CREATE TABLE gene (
     )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE infunction (
+=======
+    chromosome varchar(255) not null,
+    start_position int not null,
+    end_position int not null,
+    name varchar(255) not null, 
+    PRIMARY KEY(GID)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+    
+CREATE TABLE infucntion (
+>>>>>>> Stashed changes
     IFID int not null AUTO_INCREMENT,
     GOID int not null,
     GID int,
