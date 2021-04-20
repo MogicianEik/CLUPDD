@@ -163,6 +163,8 @@ def insert(df, enotes, pdic):
         connection.commit()
     connection.close()
     
+
+    
 if __name__ == '__main__':
     df = read_vcf('Ros_FMNM_subset.snpeff.ann.ud0.vcf')
     print(df.head())
