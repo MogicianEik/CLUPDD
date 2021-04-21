@@ -162,8 +162,72 @@ def insert(df, enotes, pdic):
         cursor.execute(query)
         connection.commit()
     connection.close()
-    
 
+# insert into gene and associate table
+def insert_gene(gff3_file):
+    connection = pymysql.connect(db='group_C', user='test',
+                       passwd='test',
+                       port = 4253)
+    cursor = connection.cursor()
+    df = pd.read_csv(gff3_file,sep='\t',comment='#')
+    df.columns=['chromosome','source','type','start','end','score','strand','phase','attributes']
+    for index, row in df.iterrows():
+        table_att = {'Name':"",'ID':"",'Parent':"",'owner':"",'symbol':""}
+        atts = row['attributes'].split(';')
+        for key in table_att:
+            for att in atts:
+                if key in att:
+                    table_att[key] = att[len(key):]
+        query = '''INSERT INTO gene(chromosome, start_position, end_position, name, id, symbol, parent, owner, feature_type)
+                    VALUES("{}",{},{},"{}","{}","{}","{}","{}","{}")'''.format(row['chromosome'],
+                    row['start'],
+                    row['end'],
+                    table_att['Name'],
+                    table_att['ID'],
+                    table_att['symbol'],
+                    table_att['Parent'],
+                    table_att['owner'],
+                    row['type'])
+        cursor.execute(query)
+        connection.commit()
+        cursor.execute('''SELECT LAST_INSERT_ID();''')
+        results = cursor.fetchall()
+        GID = results[0]
+        # insert into associate
+        query = '''SELECT RPID FROM reference WHERE position >= {} AND position <= {}'''.format(row['start'],row['end'])
+        cursor.execute(query)
+        results = cursor.fetchall()
+        for RPID in results:
+            query = '''INSERT INTO associate(RPID,GID) VALUES({},{})'''.format(RPID,GID)
+            cursor.execute(query)
+        connection.commit()
+    connection.close()
+
+# insert into infunction table
+def insert_infunction(anno_file):        
+    infile = open(anno_file,'r')
+    connection = pymysql.connect(db='group_C', user='test',
+                       passwd='test',
+                       port = 4253)
+    cursor = connection.cursor()
+    for line in infile.readlines():
+        symbol = line.split()[0]
+        goterms = line.split()[1].split(',')
+        query = '''SELECT GID FROM gene WHERE symbol = "{}";'''.format(symbol)
+        cursor.execute(query)
+        results = cursor.fetchall()
+        GID = results[0]
+        for term in goterms:
+            query = '''SELECT GOID FROM goterm WHERE name = "{}";'''.format(term)
+            cursor.execute(query)
+            results = cursor.fetchall()
+            GOID = results[0]
+            query = '''INSERT INTO infunction(GOID,GID) VALUES ({},{})'''.format(GOID,GID)
+            cursor.execute(query)
+        connection.commit()
+    cursor.close()
+    connection.close()
+    infile.close()
     
 if __name__ == '__main__':
     df = read_vcf('Ros_FMNM_subset.snpeff.ann.ud0.vcf')
