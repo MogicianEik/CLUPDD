@@ -93,8 +93,7 @@ CREATE TABLE reference (
 
 CREATE TABLE gene (
     GID int not null AUTO_INCREMENT,
-<<<<<<< Updated upstream
-    chromosome_number int not null,
+    chromosome varchar(255) not null,
     start_position int not null,
     end_position int not null,
     feature_type varchar(255) not null,
@@ -107,7 +106,6 @@ CREATE TABLE gene (
     )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE infunction (
-=======
     chromosome varchar(255) not null,
     start_position int not null,
     end_position int not null,
@@ -116,7 +114,6 @@ CREATE TABLE infunction (
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
     
 CREATE TABLE infucntion (
->>>>>>> Stashed changes
     IFID int not null AUTO_INCREMENT,
     GOID int not null,
     GID int,
