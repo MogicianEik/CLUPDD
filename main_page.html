@@ -39,51 +39,51 @@
     <h3>Query the database</h3>
     <div class="select_query">
       <div class="select_query_buttons">
-        <button id="SNPbutton">Search SNP</button>
-        <button id="Genebutton">Search Gene</button>
-        <button id="Regionbutton">Search Region</button>
+        <button id="SNPbutton">Search by SNP</button>
+        <button id="Genebutton">Search by Gene</button>
+        <button id="Regionbutton">Search by Region</button>
         <button id="Advancedbutton">Advanced Search</button>
       </div>
       <form id="search_snp" action="Submit" method="get">
-        Chromosome: <select>
-         <option value="1">1</option>
-         <option value="2">2</option>
-         <option value="3">3</option>
+        Chromosome: <select id="chrom">
+         <option value="chr1">1</option>
+         <option value="chr2">2</option>
+         <option value="chr3">3</option>
          </select>
-         Position: <input type="text" name="name" />
+         Position: <input type="text" id="pos" />
         <input type="submit" value="Search" />
       </form>
         <form id="search_gene" action="Submit" method="get">
-         Gene name: <input type="text" name="name" />
+         Gene name: <input type="text" id="gene_name" />
         <input type="submit" value="Search" />
       </form>
       <form id="search_region" action="Submit" method="get">
-        Chromosome: <select name="month">
-         <option value="1">1</option>
-         <option value="2">2</option>
-         <option value="3">3</option>
+        Chromosome: <select id="chrom">
+         <option value="chr1">1</option>
+         <option value="chr2">2</option>
+         <option value="chr3">3</option>
          </select>
-         Start position: <input type="text" name="name" />
-         End position: <input type="text" name="name" />
+         Start position: <input type="text" id="start_pos" />
+         End position: <input type="text" id="end_pos" />
         <input type="submit" value="Search" />
       </form>
       <form id="advanced_search" action="Submit" method="get">
         <p style="font-weight: 600;">Advanced search allows for more felxible queries but will run slower</p>
         <p>Blank fields assume no contraints on those fields</p>
-        Chromosome: <select name="chrom">
+        Chromosome: <select id="chrom">
          <option value="1">1</option>
          <option value="2">2</option>
          <option value="3">3</option>
          </select>
-         Start position: <input type="text" name="start" />
-         End position: <input type="text" name="end" />
+         Start position: <input type="text" id="start_pos" />
+         End position: <input type="text" id="end_pos" />
          <br/><br/>
-         Gene name: <input type="text" name="name" />
+         Gene name: <input type="text" id="gene_name" />
          <br/><br/>
-         GO Term: <input type="text" name="name" />
+         GO Term: <input type="text" id="go_term" />
          <br/><br/>
-         SNP Effect: <input type="text" name="name" />
-         SNP Impact: <select>
+         SNP Effect: <input type="text" id="effect" />
+         SNP Impact: <select id="impact">
            <option value=""></option>
            <option value="HIGH">HIGH</option>
            <option value="MODERATE">MODERATE</option>
@@ -91,10 +91,10 @@
            <option value="MODIFIER">MODIFIER</option>
          </select>
          <br/><br/>
-         Population: <input type="text" name="name" />
-         Sample: <input type="text" name="name" />
+         Population: <input type="text" id="pop" />
+         Sample: <input type="text" id="sample" />
          <br/><br/>
-         Experiment: <input type="text" name="name" />
+         Experiment: <input type="text" id="experiment" />
          <br/><br/>
          <input type="submit" value="Search" />
       </form>
@@ -131,9 +131,67 @@
           });
       </script>
     </div>
+    <div class="results_container">
+      <div class="toggle_results">
+        <p id="hide_res">Hide results</p>
+        <p id="show_res">Show results</p>
+      </div>
+      <div class="results" id="results">
+        <p>results placeholder</p>
+      </div>
+      <script type="text/javascript">
+        $(document).ready(function(){
+          $("#results_container").hide();
+          $("#show_res").hide();
+          $("#hide_res").click(function(){
+            $("#hide_res").hide();
+            $("#show_res").show();
+            $("#results").hide();
+          });
+          $("#show_res").click(function(){
+            $("#show_res").hide();
+            $("#hide_res").show();
+            $("#results").show();
+          });
+          $("form").onsubmit(function(event){
+            event.preventDefault();
+            $("#results_container").show();
+            getResultRows();
+          });
+          var getResultRows = function(){
+            chrom = $("#chromosome").val();
+            pos = $("#position").val();
+            gene_name = $("#gene_name").val();
+            start_pos = $("#start_pos").val();
+            end_pos = $("#end_pos").val();
+            go_term = $("#go_term").val();
+            effect = $("#effect").val();
+            impact = $("#impact").val();
+            pop = $("#pop").val();
+            sample = $("#sample").val();
+            experiment = $("#experiment").val();
+            $.ajax({
+                url: 'https://bioed.bu.edu/cgi-bin/gbenson/getInfoFromPathwaysDbForAjax2.py',
+                type: 'get',
+                data: {'submit':'submit','path_name':path_name}, //send to the program
+                success: function(response){
+                    // clear any existing html in the ppiTable div
+                    $("#ppiTable").empty();
+                    //append the table title
+                    $("#ppiTable").append("<h3>Interacting Proteins</h3>");
+                    //append the names of the target gene and pathway
+                    $("#ppiTable").append("<br><b>Target Gene: "+gene_name+"</b><br>");
+                    $("#ppiTable").append("<b>Pathway: "+path_name+"</b>");
+                    //append the header line of the interacting proteins table
+                    $("#ppiTable").append("<table><tbody><tr><th>Protein 1</th><th>Protein 2</th><th>Pathway</th></tr></tbody></table>");
+                    $("#ppiTable tbody").append(response)
+                }
+        });
+      </script>
+    </div>
   </div>
 
-  <div class="jbrowse" onload="this.width=screen.width;this.height=screen.height;">
+  <div class="jbrowse">
       <iframe
           src="https://bioed.bu.edu/students_21/group_proj/group_C/jbrowse/index.html"
           style="border: 1px solid black"
