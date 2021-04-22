@@ -64,7 +64,7 @@ def insert(df, enotes, pdic):
     cursor = connection.cursor()
     
     # insert into experiment TODO: make notes mandatory on the html page
-    query = '''INSERT INTO experiment(notes) VALUES ("{}")'''.format(notes)
+    query = '''INSERT INTO experiment(notes) VALUES ("{}")'''.format(enotes)
     cursor.execute(query)
     connection.commit()
     
@@ -73,18 +73,18 @@ def insert(df, enotes, pdic):
     for pname in pnames:
         query = '''INSERT INTO population(name) VALUES ("{}")'''.format(pname)
         cursor.execute(query)
-    cursor.commit()
+    connection.commit()
     
     # insert into sample
     query = '''SELECT EID FROM experiment WHERE notes = "{}";'''.format(enotes)
     cursor.execute(query)
     results = cursor.fetchall()
-    EID = results[0]
+    EID = results[0][0]
     for sname in pdic:
         query = '''SELECT PID FROM population WHERE name = "{}";'''.format(pdic[sname][0])
         cursor.execute(query)
         results = cursor.fetchall()
-        PID = results[0]
+        PID = results[0][0]
         query = '''INSERT INTO sample(PID, EID, identifier, notes) VALUES ({},{},'{}','{}')'''.format(PID,EID,sname,pdic[sname][1])
         cursor.execute(query)
     connection.commit()
@@ -104,10 +104,10 @@ def insert(df, enotes, pdic):
         query = '''SELECT RPID FROM reference WHERE chromosome = "{}" AND position = {} AND allele = "{}"'''.format(row['chrom'],int(row['POS']),row['REF'])
         cursor.execute(query)
         results = cursor.fetchall()
-        RPID = results[0]
+        RPID = results[0][0]
         # get all info for SNP
-        query = '''INSERT INTO snp(PRID,alt_allele,qual,filter,AC,AF,AN,baseQRankSum,clippingRankSum,DP,excessHet,FS,inbreedingCoeff,MLEAC,MLEAF,MQ,MQRankSum,QD,readPosRankSUM,SOR)
-                    VALUES({},"{}",{},"{}",{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{})'''.format(PRID,
+        query = '''INSERT INTO snp(RPID,alt_allele,qual,filter,AC,AF,AN,baseQRankSum,clippingRankSum,DP,excessHet,FS,inbreedingCoeff,MLEAC,MLEAF,MQ,MQRankSum,QD,readPosRankSUM,SOR)
+                    VALUES({},"{}",{},"{}",{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{})'''.format(RPID,
                     row['ALT'],
                     float(row['QUAL']),
                     row['FILTER'],
@@ -133,7 +133,7 @@ def insert(df, enotes, pdic):
         # get the id of what just inserted
         cursor.execute('''SELECT LAST_INSERT_ID();''')
         results = cursor.fetchall()
-        SNPID = results[0]
+        SNPID = results[0][0]
         # insert into snpeffect
         for allele in row['INFO']['ANN']:
             query = '''INSERT INTO snpeffect(SNPID,allele,effect,impact,gene_name,feature_type,transcript_biotype,ranktotal,HGVSc,HGVSp,cDNA_positioncDNA_length,Protein_positionProtein_length,warnings)
@@ -157,7 +157,7 @@ def insert(df, enotes, pdic):
         query = '''SELECT SID FROM sample WHERE EID = {} AND identifier = "{}"'''.format(EID,row['sample'])
         cursor.execute(query)
         results = cursor.fetchall()
-        SID = results[0]
+        SID = results[0][0]
         query = '''INSERT INTO have(SID,SNPID,GT,GQ) VALUES({},{},"{}",{})'''.format(SID,SNPID,row['GT'],row['GQ'])
         cursor.execute(query)
         connection.commit()
@@ -192,7 +192,7 @@ def insert_gene(gff3_file):
         connection.commit()
         cursor.execute('''SELECT LAST_INSERT_ID();''')
         results = cursor.fetchall()
-        GID = results[0]
+        GID = results[0][0]
         # insert into associate
         query = '''SELECT RPID FROM reference WHERE position >= {} AND position <= {}'''.format(row['start'],row['end'])
         cursor.execute(query)
@@ -216,12 +216,12 @@ def insert_infunction(anno_file):
         query = '''SELECT GID FROM gene WHERE symbol = "{}";'''.format(symbol)
         cursor.execute(query)
         results = cursor.fetchall()
-        GID = results[0]
+        GID = results[0][0]
         for term in goterms:
             query = '''SELECT GOID FROM goterm WHERE name = "{}";'''.format(term)
             cursor.execute(query)
             results = cursor.fetchall()
-            GOID = results[0]
+            GOID = results[0][0]
             query = '''INSERT INTO infunction(GOID,GID) VALUES ({},{})'''.format(GOID,GID)
             cursor.execute(query)
         connection.commit()
@@ -231,5 +231,11 @@ def insert_infunction(anno_file):
     
 if __name__ == '__main__':
     df = read_vcf('Ros_FMNM_subset.snpeff.ann.ud0.vcf')
-    print(df.head())
-    print (len((get_samples(df))))
+    enotes = 'This is a test'
+    samples = get_samples(df)
+    pdic = {key:['fake_pop',''] for key in samples}
+    insert(df,enotes,pdic)
+    # update goterm
+    insert_goterm('goterms.txt')
+    # update gene
+    insert_gene('CLUMA2.0_Annotations_subset_chr3.gff3')
