@@ -33,7 +33,7 @@ CREATE TABLE snp (
     RPID int not null,
     alt_allele varchar(255) not null,
     qual decimal(10,4) not null,
-    pass varchar(10) not null,
+    filter varchar(255) DEFAULT NULL,
     AC int not null,
     AF decimal(6,5) not null,
     AN int not null,
@@ -87,7 +87,7 @@ CREATE TABLE reference (
     RPID int not null AUTO_INCREMENT,
     chromosome varchar(4) not null,
     position int not null,
-    allele varchar(1) not null,
+    allele varchar(255) not null,
     PRIMARY KEY(RPID)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
