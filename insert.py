@@ -177,7 +177,7 @@ def insert_gene(gff3_file):
         for key in table_att:
             for att in atts:
                 if key in att:
-                    table_att[key] = att[len(key):]
+                    table_att[key] = att[len(key)+1:]
         query = '''INSERT INTO gene(chromosome, start_position, end_position, name, id, symbol, parent, owner, feature_type)
                     VALUES("{}",{},{},"{}","{}","{}","{}","{}","{}")'''.format(row['chromosome'],
                     row['start'],
@@ -198,7 +198,7 @@ def insert_gene(gff3_file):
         cursor.execute(query)
         results = cursor.fetchall()
         for RPID in results:
-            query = '''INSERT INTO associate(RPID,GID) VALUES({},{})'''.format(RPID,GID)
+            query = '''INSERT INTO associate(RPID,GID) VALUES({},{})'''.format(RPID[0],GID)
             cursor.execute(query)
         connection.commit()
     connection.close()
@@ -216,15 +216,21 @@ def insert_infunction(anno_file):
         query = '''SELECT GID FROM gene WHERE symbol = "{}";'''.format(symbol)
         cursor.execute(query)
         results = cursor.fetchall()
-        GID = results[0][0]
-        for term in goterms:
-            query = '''SELECT GOID FROM goterm WHERE name = "{}";'''.format(term)
-            cursor.execute(query)
-            results = cursor.fetchall()
-            GOID = results[0][0]
-            query = '''INSERT INTO infunction(GOID,GID) VALUES ({},{})'''.format(GOID,GID)
-            cursor.execute(query)
-        connection.commit()
+        if results:
+            GID = results[0][0]
+            for term in goterms:
+                query = '''SELECT GOID FROM goterm WHERE name = "{}";'''.format(term)
+                cursor.execute(query)
+                results = cursor.fetchall()
+                if results: # situation that GO term does not exit in goterm table
+                    GOID = results[0][0]
+                    query = '''INSERT INTO infunction(GOID,GID) VALUES ({},{})'''.format(GOID,GID)
+                    cursor.execute(query)
+                else:
+                    print('Exception: {} does not exist in goterm'.format(term))
+            connection.commit()
+        else:
+            print('Exception: {} does not exist in gene'.format(symbol))
     cursor.close()
     connection.close()
     infile.close()
@@ -239,3 +245,5 @@ if __name__ == '__main__':
     insert_goterm('goterms.txt')
     # update gene
     insert_gene('CLUMA2.0_Annotations_subset_chr3.gff3')
+    # update infunction
+    insert_infunction('chr3_genes_GO_annotations.txt')
