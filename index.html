@@ -1,6 +1,29 @@
 <DOCTYPE html>
 <html>
+<<<<<<< HEAD
 
+=======
+<style type="text/css">
+table
+{
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+table
+{
+    width: 100%;
+    table-layout: auto;
+}
+
+td, th
+{
+    text-align: center;
+    border: 0px solid #000000;
+}
+
+</style>
+>>>>>>> origin/main
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -23,7 +46,11 @@
   <div class="navbar">
       <nav>
 	<ul class="main_menu">
+<<<<<<< HEAD
           <li><a href="main_page.html">Home</a></li>
+=======
+          <li><a href="index.html">Home</a></li>
+>>>>>>> origin/main
           <li><a href="about.html">About</a></li>
           <li><a href="Fst.html">Calculate Fst</a></li>
           <li><a href="http://cluniobase.cibiv.univie.ac.at/home">ClunioBase</a></li>
@@ -51,7 +78,11 @@
          <option value="chr3">3</option>
          </select>
          Position: <input type="number" id="s-pos" />
+<<<<<<< HEAD
         <input type="submit" value="Search" />
+=======
+        <input type="submit" id="submit" value="Search" />
+>>>>>>> origin/main
       </form>
       <form id="search_gene">
          Gene name: <input type="text" id="g-gene_name" />
@@ -68,7 +99,11 @@
         <input type="submit" value="Search" />
       </form>
       <form id="advanced_search">
+<<<<<<< HEAD
         <p style="font-weight: 600;">Advanced search allows for more felxible queries but will run slower</p>
+=======
+        <p style="font-weight: 600;">Advanced search allows for more flexible queries but will run slower</p>
+>>>>>>> origin/main
         <p>Help on queries can be found in the about page</p>
         <textarea id="advanced_query" rows="6" cols="70"></textarea>
         <br></br>
@@ -133,21 +168,37 @@
     $("#search_snp").on('submit', function(event){
       event.preventDefault();
       $('#results_container').show();
+<<<<<<< HEAD
+=======
+      $("#results").show()
+>>>>>>> origin/main
       getSnpResultRows();
       });
     $("#search_gene").on('submit', function(event){
       event.preventDefault();
       $('#results_container').show();
+<<<<<<< HEAD
+=======
+      $("#results").show()
+>>>>>>> origin/main
       getGeneResultRows();
       });
     $("#search_region").on('submit', function(event){
       event.preventDefault();
       $('#results_container').show();
+<<<<<<< HEAD
+=======
+      $("#results").show()
+>>>>>>> origin/main
       getRegionResultRows();
       });
     $("#advanced_search").on('submit', function(event){
       event.preventDefault();
       $('#results_container').show();
+<<<<<<< HEAD
+=======
+      $("#results").show()
+>>>>>>> origin/main
       getAdvancedResultRows();
       });
     });
@@ -218,3 +269,7 @@
 </div>
 </body>
 </html>
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/main

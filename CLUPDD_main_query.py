@@ -15,60 +15,29 @@ if form:
     connection = pymysql.connect(db='group_C',user='test',password='test',port = 4253)
     cursor = connection.cursor()
     
-    search_snp = form.getvalue("search_snp")
-    if search_snp:
-        #snp query
+    #snp query
+    if "chromosome" in form:
         chrom = form.getvalue("chromosome")
         pos = form.getvalue("position")
-        #query = """
-        #SELECT reference.allele, snpeffect.allele, effect, impact, gene.name, description
-        #FROM reference JOIN snp USING(RPID) 
-        #JOIN snpeffect USING(SNPID)
-        #JOIN associate USING(RPID)
-        #JOIN gene USING(GID)
-        #JOIN infunction USING(GID)
-        #JOIN goterm USING(GOID)
-        #WHERE reference.chromosome = '%s' AND position = %s""" % (chrom, pos)
+        query = """
+        SELECT reference.allele, snpeffect.allele, effect, impact, gene.name, description
+        FROM reference JOIN snp USING(RPID) 
+        JOIN snpeffect USING(SNPID)
+        JOIN associate USING(RPID)
+        JOIN gene USING(GID)
+        JOIN infunction USING(GID)
+        JOIN goterm USING(GOID)
+        WHERE reference.chromosome = '%s' AND position = %s""" % (chrom, pos)
         
         #test query
-        chrom = form.getvalue("chromosome")
-        pos = form.getvalue("position")
-        query= '''
-        SELECT goid, name, description
-        FROM goterm
-        WHERE description LIKE "%s" ''' %pos
         
         cursor.execute(query)
         rows=cursor.fetchall()
-    
+        print("<table id=snp_search>")
+        print("<tr><th>Ref Allele</th><th>SNP</th><th>Effect</th><th>Impact</th><th>Gene name</th><th>Description</th></tr>")
         for row in rows:
-            print("<tr><td>%s</td><td>%s</td><td>%s</td></tr>" % (row[0], row[1], row[2]))
+            print("<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>" % (row[0], row[1], row[2],row[3],row[4],row[5]))
+        print("</table>")
     
-    if search_gene:
-        #gene query
-        
-        cursor.execute(query)
-        rows=cursor.fetchall()
-    
-        for row in rows:
-            print("<tr><td>%s</td><td>%s</td><td>%s</td></tr>" % (row[0], row[1], row[2]))
-    
-    if search-region:
-        #region query
-        
-        cursor.execute(query)
-        rows=cursor.fetchall()
-    
-        for row in rows:
-            print("<tr><td>%s</td><td>%s</td><td>%s</td></tr>" % (row[0], row[1], row[2]))
-    
-    if advanced_search:
-        #advanced query
-        
-        cursor.execute(query)
-        rows=cursor.fetchall()
-    
-        for row in rows:
-            print("<tr><td>%s</td><td>%s</td><td>%s</td></tr>" % (row[0], row[1], row[2]))
-    
-    
+    connection.close()
+
