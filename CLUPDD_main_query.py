@@ -12,7 +12,7 @@ form = cgi.FieldStorage()
 print("Content-type: text/html\n")
 
 if form:
-    connection = pymysql.connect(host='bioed.bu.edu',db='group_C',user='test',password='test')
+    connection = pymysql.connect(db='group_C',user='test',password='test',port = 4253)
     cursor = connection.cursor()
     
     search_snp = form.getvalue("search_snp")

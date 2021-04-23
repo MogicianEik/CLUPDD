@@ -29,30 +29,31 @@ CREATE TABLE sample (
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE snp (
-    SNPID int not null AUTO_INCREMENT,
-    RPID int not null,
-    alt_allele varchar(255) not null,
-    qual decimal(10,4) not null,
-    filter varchar(255) DEFAULT NULL,
-    AC int not null,
-    AF decimal(6,5) not null,
-    AN int not null,
-    baseQRankSum decimal(6,4) not null,
-    clippingRankSum decimal(6,4) not null,
-    DP int not null,
-    excessHet decimal(6,5) not null,
-    FS decimal(6,5) not null,
-    inbreedingCoeff decimal(6,5) not null,
-    MLEAC int not null,
-    MLEAF decimal(6,5) not null,
-    MQ decimal(6,3) not null,
-    MQRankSum decimal(6,5) not null,
-    QD decimal(6,3) not null,
-    readPosRankSum decimal(6,5) not null,
-    SOR decimal(6,5) not null,
-    PRIMARY KEY(SNPID),
-    FOREIGN KEY(RPID) REFERENCES reference(RPID)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  SNPID int(11) NOT NULL AUTO_INCREMENT,
+  RPID int(11) NOT NULL,
+  alt_allele varchar(255) NOT NULL,
+  qual decimal(12,5) NOT NULL,
+  filter varchar(255) DEFAULT NULL,
+  AC int(11) NOT NULL,
+  AF decimal(6,5) NOT NULL,
+  AN int(11) NOT NULL,
+  baseQRankSum decimal(12,5) NOT NULL,
+  clippingRankSum decimal(12,5) NOT NULL,
+  DP int(11) NOT NULL,
+  excessHet decimal(12,5) NOT NULL,
+  FS decimal(12,5) NOT NULL,
+  inbreedingCoeff decimal(12,5) NOT NULL,
+  MLEAC int(11) NOT NULL,
+  MLEAF decimal(12,5) NOT NULL,
+  MQ decimal(12,3) NOT NULL,
+  MQRankSum decimal(12,5) NOT NULL,
+  QD decimal(12,5) NOT NULL,
+  readPosRankSum decimal(12,5) NOT NULL,
+  SOR decimal(12,5) NOT NULL,
+  PRIMARY KEY (SNPID),
+  KEY RPID (RPID),
+  CONSTRAINT `snp_ibfk_1` FOREIGN KEY (`RPID`) REFERENCES `reference` (`RPID`)
+) ENGINE=InnoDB AUTO_INCREMENT=2266 DEFAULT CHARSET=utf8;
 
 CREATE TABLE snpeffect(
     SEID int AUTO_INCREMENT not null,
@@ -93,8 +94,7 @@ CREATE TABLE reference (
 
 CREATE TABLE gene (
     GID int not null AUTO_INCREMENT,
-<<<<<<< Updated upstream
-    chromosome_number int not null,
+    chromosome varchar(255) not null,
     start_position int not null,
     end_position int not null,
     feature_type varchar(255) not null,
@@ -107,16 +107,14 @@ CREATE TABLE gene (
     )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE infunction (
-=======
     chromosome varchar(255) not null,
     start_position int not null,
     end_position int not null,
-    name varchar(255) not null, 
+    name varchar(255) not null,
     PRIMARY KEY(GID)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
-    
+
 CREATE TABLE infucntion (
->>>>>>> Stashed changes
     IFID int not null AUTO_INCREMENT,
     GOID int not null,
     GID int,
