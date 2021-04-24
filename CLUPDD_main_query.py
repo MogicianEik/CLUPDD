@@ -20,14 +20,14 @@ if form:
         chrom = form.getvalue("chromosome")
         pos = form.getvalue("position")
         query = """
-        SELECT reference.allele, snpeffect.allele, effect, impact, gene.name, description
+        SELECT reference.allele, snpeffect.allele, effect, impact, gene.name, description, count(*)
         FROM reference JOIN snp USING(RPID) 
         JOIN snpeffect USING(SNPID)
         JOIN associate USING(RPID)
         JOIN gene USING(GID)
         JOIN infunction USING(GID)
         JOIN goterm USING(GOID)
-        WHERE reference.chromosome = '%s' AND position = %s""" % (chrom, pos)
+        WHERE reference.chromosome = '%s' AND position = %s GROUP BY description""" % (chrom, pos)
         
         #test query
         
