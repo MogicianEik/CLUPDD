@@ -106,7 +106,7 @@ CREATE TABLE gene (
     PRIMARY KEY(GID)
     )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE infucntion (
+CREATE TABLE infunction (
     IFID int not null AUTO_INCREMENT,
     GOID int not null,
     GID int,

@@ -15,22 +15,23 @@ def read_vcf(vcf_file):
             if sample.gt_bases == None:
                 #no call
                 mut=''
-                row = [sample.sample, rec.REF, sample.gt_bases, 0,0]
+                row = [sample.sample, rec.REF, rec.ALT[0], 0,0]
             elif rec.REF != sample.gt_bases:
                 mut = str(rec.end)+rec.REF+'>'+sample.gt_bases
                 cdata = sample.data
-                row = [sample.sample, rec.REF, sample.gt_bases, cdata[0], cdata[3]
+                row = [sample.sample, rec.REF, rec.ALT[0], cdata[0], cdata[3]
                       ] + x
             else:
                 #call is REF
                 mut = str(rec.end)+rec.REF              
                 cdata = sample.data
-                row = [sample.sample, rec.REF, sample.gt_bases, cdata[0], cdata[3]
+                row = [sample.sample, rec.REF, rec.ALT[0], cdata[0], cdata[3]
                       ] + x
-
+            #print(row)
             res.append(row)
     res = pd.DataFrame(res,columns=cols)
     res = res[~res.start.isnull()]
+    res.sort_values(by=['POS'], inplace=True)
     return res
     
 # get all samples in this insert
@@ -99,7 +100,6 @@ def insert(df, enotes, pdic):
     
     # insert into SNP, have, and snpeffect
     tmp_query = ''
-    snpeff = []
     for index, row in df.iterrows():
         # get the corresponding RPID 
         query = '''SELECT RPID FROM reference WHERE chromosome = "{}" AND position = {} AND allele = "{}"'''.format(row['chrom'],int(row['POS']),row['REF'])
@@ -132,8 +132,8 @@ def insert(df, enotes, pdic):
             cursor.execute(query)
             connection.commit()
             tmp_query = query # avoid repeat insertion of snp      
-        # get the id of what just inserted
-        cursor.execute('''SELECT LAST_INSERT_ID();''')
+        # get the id of what the last snp inserted
+        cursor.execute('''SELECT SNPID FROM snp WHERE RPID = {} AND alt_allele = "{}";'''.format(RPID,row['ALT']))
         results = cursor.fetchall()
         SNPID = results[0][0]
         # insert into snpeffect
@@ -244,8 +244,8 @@ if __name__ == '__main__':
     pdic = {key:['fake_pop',''] for key in samples}
     insert(df,enotes,pdic)
     # update goterm
-    insert_goterm('goterms.txt')
+    #insert_goterm('goterms.txt')
     # update gene
-    insert_gene('CLUMA2.0_Annotations_subset_chr3.gff3')
+    #insert_gene('CLUMA2.0_Annotations_subset_chr3.gff3')
     # update infunction
-    insert_infunction('chr3_genes_GO_annotations.txt')
+    #insert_infunction('chr3_genes_GO_annotations.txt')
