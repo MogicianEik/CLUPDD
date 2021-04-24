@@ -52,7 +52,7 @@ CREATE TABLE snp (
   SOR decimal(12,5) NOT NULL,
   PRIMARY KEY (SNPID),
   KEY RPID (RPID),
-  CONSTRAINT `snp_ibfk_1` FOREIGN KEY (`RPID`) REFERENCES `reference` (`RPID`)
+  FOREIGN KEY (RPID) REFERENCES reference (RPID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE snpeffect(
@@ -105,14 +105,6 @@ CREATE TABLE gene (
     owner varchar(255),
     PRIMARY KEY(GID)
     )ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE infunction (
-    chromosome varchar(255) not null,
-    start_position int not null,
-    end_position int not null,
-    name varchar(255) not null,
-    PRIMARY KEY(GID)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE infucntion (
     IFID int not null AUTO_INCREMENT,
