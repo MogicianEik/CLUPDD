@@ -67,9 +67,9 @@
     <!--Div for holding queries-->
     <div class="select_query">
       <div class="select_query_buttons">
-        <button id="SNPbutton">Search by SNP</button>
-        <button id="Genebutton">Search by Gene</button>
         <button id="Regionbutton">Search by Region</button>
+        <button id="Genebutton">Search by Gene</button>
+        <button id="SNPbutton">Search by SNP</button>
         <button id="Advancedbutton">Advanced Search</button>
       </div>
       <!--Query forms-->
@@ -147,7 +147,7 @@
         <p id="show_res">Show results</p>
       </div>
       <!--Table of results-->
-      <div class="results" id="results">ssh
+      <div class="results" id="results">
       </div>
     </div>
   </div>
@@ -200,7 +200,6 @@
           data: {'submit':'submitsnp','chromosome':chrom, 'position':pos},
           success: function(response){
           $("#results").empty();
-          $("#results").append("<h3>SNP: Chromosome "+chrom+", Position "+pos+"</h3>");
           $("#results").append(response);
         }
       });
@@ -214,7 +213,6 @@
            data: {'submit':'submitgene','gene':gene,'radio':radio},
            success: function(response){
            $("#results").empty();
-           $("#results").append("<h3>Gene "+gene+"</h3>");
            $("#results").append(response);
          }
        });
@@ -229,7 +227,6 @@
             data: {'submit':'submitregion','chromosome':chrom, 'start':start, 'end':end}, //send to the program
             success: function(response){
             $("#results").empty();
-            $("#results").append("<h3>Chromosome "+chrom+", Position "+start+"-"+end+"</h3>");
             $("#results").append(response);
           }
         });

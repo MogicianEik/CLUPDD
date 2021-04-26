@@ -154,12 +154,16 @@ if form:
         gene_results = temp_df_small.join(temp_df_small['Position'].apply(lambda x: allele_freq(x,temp_df)))
 
         #print SNPs
+        print("<div style='overflow-x: scroll;'>")
         print("<h3>SNPs That Lie In %s</h3>" % gene)
         print("<table id=gene_search>")
         print_head(gene_results)
         print_data(gene_results)
+        print("</table>")
+        print('</div>')
 
         #Print features
+        print("<div style='overflow-x: scroll;'>")
         print("</table>")
         print("<br></br>")
         print("<h3>GO Terms For %s</h3>" % gene)
@@ -167,6 +171,7 @@ if form:
         print_head(go_terms)
         print_go_terms(go_terms)
         print("</table>")
+        print('</div>')
 
 
     ###################
@@ -205,24 +210,30 @@ if form:
         #printing snp info
         snpInfo = gene_temp_df.drop(['Description','Name'], axis=1).drop_duplicates(ignore_index=True)
         print('<h3>SNP Information for SNP at %s, Position %s</h3>' % (chrom, pos)) 
+        print("<div style='overflow-x: scroll;'>")
         print('<table>')
         print_head(snpInfo)
         print_data(snpInfo)
+        print('</table>')
+        print('</div>')
         print('<br></br>')
 
         #printing effected gene
         genes = gene_temp_df['Name'].drop_duplicates()
         print('<h3>Gene Effected By SNP</h3>')
+        print("<div style='overflow-x: scroll;'>")
         print('<table>')
         print('<tr><th>Gene</th></tr>')
         for index, item in genes.iteritems():
             print('<tr><td>%s</td></tr>' % item)
         print('</table>')
+        print('</div>')
         print('<br></br>')
 
         #printing GO terms
         go = gene_temp_df['Description']
         print('<h3>Associated GO Terms</h3>')
+        print("<div style='overflow-x: scroll;'>")
         print('<table>')
         print('<tr><th>GO Terms</th><tr>')
         for index, item in go.iteritems():
@@ -232,16 +243,19 @@ if form:
             else:
                 print('<tr><td>%s</td></tr>' % item)
         print('</table>')
+        print('</div>')
         print('<br></br>')
 
         #printing pop info
         af = allele_freq_small(pop_temp_df)
         print("<h3>Alternate Allele Frequencies For Populations With SNP</h3>")
+        print("<div style='overflow-x: scroll;'>")
         print('<table>')
         print('<tr><th>Population</th><th>Allele Frequency</th></tr>')
         for index, item in af.iteritems():
             print('<tr><td>%s</td><td>%s</td></tr>' % (index, item)) 
         print('</table>')
+        print('</div>')
 
 
     ######################
@@ -275,18 +289,22 @@ if form:
         
         # Print SNPs
         print('<h3>SNPs Found in %s Position %s-%s</h3>' %(chrom,strt,end))
+        print("<div style='overflow-x: scroll;'>")
         print('<table>')
         print_head(snplist_temp_df)
         print_data(snplist_temp_df)
         print('</table>')
+        print('</div>')
         print('<br></br>')
         
         # Print Genes
         print('<h3>Genomic Features Found in %s Position %s-%s</h3>' %(chrom,strt,end))
+        print("<div style='overflow-x: scroll;'>")
         print('<table>')
         print_head(genelist_temp_df)
         print_data(genelist_temp_df)
         print('</table>')
+        print('</div>')
 
 
     ########################
@@ -302,10 +320,12 @@ if form:
 
         # Print results
         print('<h3>Results for Advanced Query</h3>')
+        print("<div style='overflow-x: scroll;'>")
         print('<table>')
         print_head(temp_df)
         print_data(temp_df)
         print('</table>')
+        print('</div>')
     
 
 ##############################
