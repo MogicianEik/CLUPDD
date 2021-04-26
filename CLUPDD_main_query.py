@@ -176,4 +176,30 @@ if form:
 
         print("</table>")
         
+        if form:
+    submit = form.getvalue("submit")
+    
+    # region query
+    if submit == "submitregion":
+        connection = pymysql.connect(db='group_C',user='test',password='test',port = 4253)
+
+        chrom = form.getvalue("chromosome")
+        strt = form.getvalue("start")
+        end = form.getvalue("end")
+    
+    # snps in region
+        query3 = """
+        SELECT reference.position, reference.allele AS Ref_allele, alt_allele AS Alt_allele
+        FROM reference JOIN snp USING(RPID)
+        WHERE chromosome = '%s' AND position BETWEEN '%s' AND '%s'""" % (chrom, strt, end)
+   
+    # genes in region
+        query4 = """SELECT start_position, end_position, feature_type, name, symbol
+        FROM gene
+        WHERE chromosome = '%s' AND start_position BETWEEN '%s' AND '%s' 
+        OR end_position BETWEEN '%s' AND '%s'""" % (chrom, strt, end)
+
+        snplist_temp_df = pd.read_sql(query3,connection)
+        genelist_temp_df = pd.read_sql(query4,connection)
+        
         connection.close()
