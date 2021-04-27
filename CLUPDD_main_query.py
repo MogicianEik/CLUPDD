@@ -155,7 +155,7 @@ if form:
 
         #print SNPs
         print("<div style='overflow-x: scroll;'>")
-        print("<h3>SNPs That Related to %s</h3>" % gene)
+        print("<h3>SNPs In %s</h3>" % gene)
         print("<table id=gene_search>")
         print_head(gene_results)
         print_data(gene_results)
