@@ -50,7 +50,7 @@
       <nav>
 	<ul class="main_menu">
           <li><a href="index.html">Home</a></li>
-          <li><a href="about.html">About</a></li>
+          <li><a href="https://www.evolbio.mpg.de/biologicalclocks">About</a></li>
           <li><a href="help.html">Help</a></li>
           <li><a href="http://cluniobase.cibiv.univie.ac.at/home">ClunioBase</a></li>
           <li><a href="https://bioed.bu.edu/students_21/group_proj/group_C/jbrowse/index.html">Jbrowse</a></li>
@@ -67,8 +67,8 @@
     <!--Div for holding queries-->
     <div class="select_query">
       <div class="select_query_buttons">
-        <button id="Regionbutton">Search by Region</button>
         <button id="Genebutton">Search by Gene</button>
+        <button id="Regionbutton">Search by Region</button>
         <button id="SNPbutton">Search by SNP</button>
         <button id="Advancedbutton">Advanced Search</button>
       </div>
@@ -200,6 +200,7 @@
           data: {'submit':'submitsnp','chromosome':chrom, 'position':pos},
           success: function(response){
           $("#results").empty();
+          $("#results").append("<h3>SNP: Chromosome "+chrom+", Position "+pos+"</h3>");
           $("#results").append(response);
         }
       });
@@ -213,6 +214,7 @@
            data: {'submit':'submitgene','gene':gene,'radio':radio},
            success: function(response){
            $("#results").empty();
+           $("#results").append("<h3>Gene(s) related to "+gene+"</h3>");
            $("#results").append(response);
          }
        });
@@ -227,6 +229,7 @@
             data: {'submit':'submitregion','chromosome':chrom, 'start':start, 'end':end}, //send to the program
             success: function(response){
             $("#results").empty();
+            $("#results").append("<h3>Chromosome "+chrom+", Position "+start+"-"+end+"</h3>");
             $("#results").append(response);
           }
         });
@@ -251,8 +254,9 @@
       src="https://bioed.bu.edu/students_21/group_proj/group_C/jbrowse/index.html"
       style="border: 1px solid black"
       width="600"
-      height="300">
+      height="600">
   </iframe>
 </div>
 </body>
 </html>
+

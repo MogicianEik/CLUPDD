@@ -105,7 +105,7 @@ if form:
         # define queries
         if radio == "symbol":
             query1 = '''
-            select reference.chromosome as Chrom, reference.position as Position, reference.allele Ref_Allele, group_concat(distinct snpeffect.allele) Alt_Allele, group_concat(distinct effect) as Effect, Impact, GT, population.name
+            select gene.name as Name, reference.chromosome as Chrom, reference.position as Position, reference.allele Ref_Allele, group_concat(distinct snpeffect.allele) Alt_Allele, group_concat(distinct effect) as Effect, Impact, GT, population.name
             from gene join associate using(gid) 
             join reference using(rpid) 
             join snp using(rpid) 
@@ -113,20 +113,20 @@ if form:
             join have using(snpid)
             join sample using(sid) 
             join population using(pid)
-            where gene.symbol = '%s' 
+            where gene.symbol regexp '%s?' or gene.symbol = '%s'
             group by rpid, sid
-            ''' % gene
+            ''' % (gene, gene)
 
             query2='''
-            select goterm.name as GO_term, Description
+            select goterm.name as GO_term, Description, gene.name as Gene
             from gene join infunction using(GID)
             join goterm using(GOID)
-            where gene.symbol = '%s'
-            ''' % gene
+            where gene.symbol regexp '%s?' or gene.symbol = '%s'
+            ''' % (gene, gene)
 
         if radio == "name":
             query1 = '''
-            select reference.chromosome as Chrom, reference.position as Position, reference.allele Ref_Allele, group_concat(distinct snpeffect.allele) Alt_Allele, group_concat(distinct effect) as Effect, Impact, GT, population.name
+            select gene.name as Name, reference.chromosome as Chrom, reference.position as Position, reference.allele Ref_Allele, group_concat(distinct snpeffect.allele) Alt_Allele, group_concat(distinct effect) as Effect, Impact, GT, population.name
             from gene join associate using(gid) 
             join reference using(rpid) 
             join snp using(rpid) 
@@ -134,28 +134,28 @@ if form:
             join have using(snpid)
             join sample using(sid) 
             join population using(pid)
-            where gene.name = '%s' 
+            where gene.name regexp '%s?' or gene.name = '%s'
             group by rpid, sid
-            ''' % gene
+            ''' % (gene, gene)
 
             query2='''
-            select goterm.name as GO_term, Description
+            select goterm.name as GO_term, Description, gene.name as Gene
             from gene join infunction using(GID)
             join goterm using(GOID)
-            where gene.name = '%s'
-            ''' % gene
+            where gene.name regexp '%s?' or gene.name = '%s'
+            ''' % (gene, gene)
         
         # Excecute queries
         temp_df = pd.read_sql(query1,connection)
         go_terms = pd.read_sql(query2,connection)
         
         # Alter data
-        temp_df_small = temp_df.drop(['GT','name'], axis = 1).drop_duplicates(ignore_index=True)
-        gene_results = temp_df_small.join(temp_df_small['Position'].apply(lambda x: allele_freq(x,temp_df)))
+        temp_df_small = temp_df.drop(['GT', 'name'], axis = 1).drop_duplicates(ignore_index=True)
+        gene_results = temp_df_small.join(temp_df_small['Position'].apply(lambda x: allele_freq(x,temp_df)), how='left', lsuffix='_left', rsuffix='_right')
 
         #print SNPs
         print("<div style='overflow-x: scroll;'>")
-        print("<h3>SNPs That Lie In %s</h3>" % gene)
+        print("<h3>SNPs That Related to %s</h3>" % gene)
         print("<table id=gene_search>")
         print_head(gene_results)
         print_data(gene_results)
@@ -335,3 +335,4 @@ if form:
 connection.close()
         
         
+
