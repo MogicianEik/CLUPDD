@@ -154,19 +154,18 @@ if form:
         gene_results = temp_df_small.join(temp_df_small['Position'].apply(lambda x: allele_freq(x,temp_df)), how='left', lsuffix='_left', rsuffix='_right')
 
         #print SNPs
-        print("<div style='overflow-x: scroll;'>")
         print("<h3>SNPs In %s</h3>" % gene)
+        print("<div style='overflow-x: scroll;'>")
         print("<table id=gene_search>")
         print_head(gene_results)
         print_data(gene_results)
         print("</table>")
         print('</div>')
+        print("<br></br>")
 
         #Print features
-        print("<div style='overflow-x: scroll;'>")
-        print("</table>")
-        print("<br></br>")
         print("<h3>GO Terms For %s</h3>" % gene)
+        print("<div style='overflow-x: scroll;'>")
         print("<table>")
         print_head(go_terms)
         print_go_terms(go_terms)
