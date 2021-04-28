@@ -119,8 +119,8 @@ if form:
 
             query2='''
             select goterm.name as GO_term, Description, gene.name as Gene
-            from gene join infunction using(GID)
-            join goterm using(GOID)
+            from gene left join infunction using(GID)
+            left join goterm using(GOID)
             where gene.symbol regexp '%s?' or gene.symbol = '%s'
             ''' % (gene, gene)
 
@@ -140,8 +140,8 @@ if form:
 
             query2='''
             select goterm.name as GO_term, Description, gene.name as Gene
-            from gene join infunction using(GID)
-            join goterm using(GOID)
+            from gene left join infunction using(GID)
+            left join goterm using(GOID)
             where gene.name regexp '%s?' or gene.name = '%s'
             ''' % (gene, gene)
         
@@ -187,10 +187,10 @@ if form:
         SELECT reference.allele as Ref_allele, snpeffect.allele as Alt_allele, Effect, Impact, gene.Name, Description
         FROM reference JOIN snp USING(RPID) 
         JOIN snpeffect USING(SNPID)
-        JOIN associate USING(RPID)
-        JOIN gene USING(GID)
-        JOIN infunction USING(GID)
-        JOIN goterm USING(GOID)
+        LEFT JOIN associate USING(RPID)
+        LEFT JOIN gene USING(GID)
+        LEFT JOIN infunction USING(GID)
+        LEFT JOIN goterm USING(GOID)
         WHERE reference.chromosome = '%s' AND position = %s
         GROUP BY description""" % (chrom, pos)
 
