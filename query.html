@@ -18,7 +18,7 @@
       <h3>The Clunio Population Differentiation Database</h3>
     </div>
   </div>
-  <!--Script for download function-->
+  <!--Script for download and popup functions-->
   <script type="text/javascript">
   function downloadCSV(csv, filename) {
      var csvFile;
@@ -43,6 +43,10 @@
        csv.push(row.join(","));
    }
    downloadCSV(csv.join("\n"), filename);
+  }
+  function newPopup(url) {
+	popUpWindow = window.open(
+		url,'popUpWindow','height=300,width=400,left=10,top=10,resizable=yes,scrollbars=yes,toolbar=yes,menubar=no,location=no,directories=no,status=yes')
   }
   </script>
   <!--Navigation bar-->
@@ -101,6 +105,7 @@
       <form id="advanced_search">
         <p style="font-weight: 600;">Advanced search allows for more flexible queries but will run slower</p>
         <p>Help on queries can be found in the about page</p>
+        <p><a href="javascript:newPopup('diagram_popup.html');" style="margin-right: 40px;">See Diagram</a><a href="javascript:newPopup('tables_popup.html');">See Tables</a></p>
         <textarea id="advanced_query" rows="6" cols="70"></textarea>
         <br></br>
        <input type="submit" value="Search" />
