@@ -1,0 +1,287 @@
+.heading{
+  background: #BFDBE5;
+  background: -moz-linear-gradient(left, #BFDBE5 0%, #92A8AF 0%, #5D6B6F 100%);
+  background: -webkit-linear-gradient(left, #BFDBE5 0%, #92A8AF 0%, #5D6B6F 100%);
+  background: linear-gradient(to right, #BFDBE5 0%, #92A8AF 0%, #5D6B6F 100%);
+  box-shadow: 3px 3px 3px 2px rgba(0, 0, 0, 0.2);
+  border: 1px solid black;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+.heading .image{
+  float:left;
+  height: 110px;
+}
+
+.heading .image img {
+  height:95px;
+  padding: 5px;
+  padding-bottom: 5px;
+}
+
+.heading h1{
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 50px;
+  letter-spacing: 0px;
+  word-spacing: 0.4px;
+  color: #000000;
+  font-weight: 700;
+  text-decoration: none;
+  font-style: normal;
+  font-variant: normal;
+  text-transform: none;
+  text-align: left;
+  margin-top: 10px;
+  margin-bottom: 0px;
+}
+
+.heading h3{
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 16px;
+  letter-spacing: 0px;
+  word-spacing: 0.4px;
+  color: #000000;
+  font-weight: 400;
+  text-decoration: none;
+  font-style: normal;
+  font-variant: normal;
+  text-transform: none;
+  margin-top: 0px;
+}
+
+.navbar {
+  background: #3D4749;
+  background: -moz-linear-gradient(left, #3D4749 0%, #374042 0%, #23292B 100%);
+  background: -webkit-linear-gradient(left, #3D4749 0%, #374042 0%, #23292B 100%);
+  background: linear-gradient(to right, #3D4749 0%, #374042 0%, #23292B 100%);
+  box-shadow: 3px 3px 3px 2px rgba(0, 0, 0, 0.2);
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 0px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar li{
+  display: inline-block;
+  padding: 0px 20px;
+  padding-left: 0px
+}
+
+.navbar li a{
+  transition: all 0.3s ease 0s;
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 14px;
+  color: #C4C4C4;
+  letter-spacing: 0px;
+  word-spacing: 0.4px;
+  font-weight: 400;
+  text-decoration: none;
+  font-style: normal;
+  font-variant: normal;
+  text-transform: none;
+  margin-top: 0px;
+}
+
+.navbar li a:hover{
+  color: #BFDBE5
+}
+
+.welcome_container{
+  background-image: url("https://bioed.bu.edu/images/students_21/group_proj/group_C/larva.jpg");
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  border-style: solid;
+  border-width: thin;
+  box-shadow: 3px 3px 3px 2px rgba(0, 0, 0, 0.2);
+}
+
+.welcome{
+  background: #C4C4C4;
+  box-shadow: 3px 3px 3px 2px rgba(0, 0, 0, 0.2);
+  border-radius: 15px;
+  border-style: solid;
+  border-width: medium;
+  width: 85%;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  text-align:center;
+  vertical-align: middle;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.welcome h1{
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 50px;
+  letter-spacing: 0px;
+  word-spacing: 0.4px;
+  color: #000000;
+  font-weight: 700;
+  text-decoration: none;
+  font-style: normal;
+  font-variant: normal;
+  text-transform: none;
+  margin-bottom: 5px;
+  margin-top: 10px;
+}
+
+.welcome h3{
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 16px;
+  letter-spacing: 0px;
+  word-spacing: 0.4px;
+  color: #000000;
+  font-weight: 400;
+  text-decoration: none;
+  font-style: normal;
+  font-variant: normal;
+  text-transform: none;
+  margin-top: 0px;
+}
+
+.main_container{
+  background: #3D4749;
+  background: -moz-linear-gradient(left, #3D4749 0%, #374042 0%, #23292B 100%);
+  background: -webkit-linear-gradient(left, #3D4749 0%, #374042 0%, #23292B 100%);
+  background: linear-gradient(to right, #3D4749 0%, #374042 0%, #23292B 100%);
+  box-shadow: 3px 3px 3px 2px rgba(0, 0, 0, 0.2);
+  border: 1px solid black;
+  border-radius: 5px;
+  width: 100%;
+  margin-bottom: 10px;
+  text-align:center;
+  vertical-align: middle;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.info_block{
+  background: #C4C4C4;
+  box-shadow: 3px 3px 3px 2px rgba(0, 0, 0, 0.2);
+  border: 1px solid black;
+  width: 95%;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  padding: 10px;
+  text-align:center;
+  vertical-align: middle;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#info_block1{
+  border-radius: 10px 115px 115px 10px;
+}
+
+#info_block2{
+  border-radius: 115px 10px 10px 115px;
+}
+
+#info_block3{
+  border-radius: 10px 115px 115px 10px;
+}
+
+.info_block .text{
+  vertical-align: middle;
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 16px;
+  letter-spacing: 0px;
+  word-spacing: 0.4px;
+  color: #000000;
+  font-weight: 400;
+  text-decoration: none;
+  font-style: normal;
+  font-variant: normal;
+  text-transform: none;
+  width: 70%;
+  float:left;
+  margin: 10px auto;
+  background: rgba(150,150,150,1);
+  border-style: solid;
+  border-width:thin;
+  border-radius: 5px;
+  box-shadow: 3px 3px 3px 2px rgba(0, 0, 0, 0.2);
+  z-index:2;
+}
+
+.info_block .p{
+  background: rgba(240,240,240,1);
+  border-style: none;
+  border-width:thin;
+  border-radius: 0px 0px 5px 5px ;
+  padding: 5px;
+}
+
+.info_block .image{
+  vertical-align: middle;
+  display: inline;
+  margin: 5px auto;
+  z-index:1;
+}
+
+.info_block #image1{
+  float: right;
+  margin-right: 5px;
+}
+
+.info_block #image2{
+  float: left;
+  margin-left: 5px;
+}
+
+.info_block #image3{
+  float: left;
+  margin-right: 5px;
+}
+
+.info_block img{
+  height: 200px;
+  border-radius: 50%;
+  border-style: solid;
+}
+
+.info_block .clear{
+  clear: both;
+}
+
+#developers_info{
+  vertical-align: middle;
+  font-family: Verdana, Geneva, sans-serif;
+  font-size: 12px;
+  letter-spacing: 0px;
+  word-spacing: 0.4px;
+  color: #000000;
+  font-weight: 400;
+  text-decoration: none;
+  font-style: normal;
+  font-variant: normal;
+  text-transform: none;
+  background: rgba(240,240,240,1);
+  border-radius: 5px;
+  border-style: solid;
+  border-width: thin;
+  padding: 10px;
+  box-shadow: 3px 3px 3px 2px rgba(0, 0, 0, 0.2);
+}
+
+#links {
+  display: flex;
+  align-items: center;
+  justify-content:center;
+}
+
+#links img{
+  height: 150px;
+}
+
+.link{
+  margin:20px;
+}
