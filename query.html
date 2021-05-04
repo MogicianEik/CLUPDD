@@ -210,7 +210,9 @@
           data: {'submit':'submitsnp','chromosome':chrom, 'position':pos},
           success: function(response){
           $("#results").empty();
+          $("#jbrowse").empty();
           $("#results").append(response);
+          $("#jbrowse").append("<iframe src='https://bioed.bu.edu/students_21/group_proj/group_C/jbrowse/index.html?loc="+chrom+"%3A"+pos+"&tracks=DNA%2CGenes%2Cmyvcf&highlight=' style='border: 1px solid black' width='600' height='600'></iframe>");
         }
       });
      };
@@ -237,7 +239,9 @@
             data: {'submit':'submitregion','chromosome':chrom, 'start':start, 'end':end}, //send to the program
             success: function(response){
             $("#results").empty();
+            $("#jbrowse").empty();
             $("#results").append(response);
+            $("#jbrowse").append("<iframe src='https://bioed.bu.edu/students_21/group_proj/group_C/jbrowse/index.html?loc="+chrom+"%3A"+start+".."+end+"&tracks=DNA%2CGenes%2Cmyvcf&highlight=' style='border: 1px solid black' width='600' height='600'></iframe>");
           }
         });
        };
@@ -256,7 +260,7 @@
          };
 </script>
 <!--jbrowse-->
-<div class="jbrowse">
+<div id='jbrowse' class="jbrowse">
   <iframe
       src="https://bioed.bu.edu/students_21/group_proj/group_C/jbrowse/index.html"
       style="border: 1px solid black"
