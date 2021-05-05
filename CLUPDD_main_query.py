@@ -184,13 +184,13 @@ if form:
 
         # Define queries
         query1 = """
-        SELECT reference.allele as Ref_allele, snpeffect.allele as Alt_allele, Effect, Impact, gene.Name, Description
+        SELECT reference.allele as Ref_allele, snpeffect.allele as Alt_allele, Effect, Impact,gene.Feature_type, gene.Name, gene.Symbol, Description
         FROM reference JOIN snp USING(RPID) 
         JOIN snpeffect USING(SNPID)
-        LEFT JOIN associate USING(RPID)
-        LEFT JOIN gene USING(GID)
-        LEFT JOIN infunction USING(GID)
-        LEFT JOIN goterm USING(GOID)
+        JOIN associate USING(RPID)
+        JOIN gene USING(GID)
+        JOIN infunction USING(GID)
+        JOIN goterm USING(GOID)
         WHERE reference.chromosome = '%s' AND position = %s
         GROUP BY description""" % (chrom, pos)
 
@@ -218,13 +218,25 @@ if form:
         print('<br></br>')
 
         #printing effected gene
-        genes = gene_temp_df['Name'].drop_duplicates()
+        genes = gene_temp_df[['Feature_type','Name','Symbol']].drop_duplicates()
         print('<h3>Gene Effected By SNP</h3>')
         print("<div style='overflow-x: scroll;'>")
         print('<table>')
-        print('<tr><th>Gene</th></tr>')
-        for index, item in genes.iteritems():
-            print('<tr><td>%s</td></tr>' % item)
+        print_head(genes)
+        for index, row in genes.iterrows():
+            table_row = "<tr>"
+            if row[0] == 'gene':
+                for i, value in enumerate(row):
+                    if i == 2:
+                        table_row = table_row + "<td><a href='https://www.ncbi.nlm.nih.gov/search/all/?term=%s&ac=no&sp=r'>%s</a></td>" % (value, value)
+                    else:
+                        table_row = table_row + "<td>%s</td>" % value
+            else:
+                for value in row:
+                    value = str(value)
+                    table_row = table_row + "<td>%s</td>" % value
+            table_row = table_row + "</tr>"
+            print(table_row)
         print('</table>')
         print('</div>')
         print('<br></br>')
