@@ -37,8 +37,8 @@
     <div class='info_block'>
       <h3>General Overview, Database Structure, and Suggested Workflow</h3>
       <div class='p'>
-        <p>CLUPDD is organized around the idea of linking two types of data: genomic variant data in the form of single nucleotide polymorphisms (SNPs) and information about genomic features obtained through RNAseq. This linking is done through each feature's position relative to the reference genome. A diagram of the structure of the database is below. Objects with green headers are entity tables, whoes attributes are listed below the header. Diamonds are relationships, and may or may not include associated info (such as the 'have' relationship, which includes GT and GQ for each Sample-SNP relationship).</p>
-        <p>Queries have been designed to retreive one kind of information when you have knowlge of the other. If you have a SNP of interest and would like to know the genes it may effect, then use Search by SNP. If you have a gene and would like to know what SNPs may effect it and what populations have those SNPs, then use Search by Gene. If you have a region of interest and would like the see the SNPs or the Genes that are in that region, then Search by Region. If you would like to preform a query outside of the capabilities of the Search by Region/Gene/SNP queries, then use the Advanced Search option.</p>
+        <p>CLUPDD is organized around the idea of linking two types of data: genomic variant data in the form of single nucleotide polymorphisms (SNPs) and information about genomic features obtained through RNAseq. This linking is done through each feature's position relative to the reference genome. A diagram of the structure of the database is below. Objects with green headers are entity tables, whose attributes are listed below the header. Diamonds are relationships, and may or may not include associated info (such as the 'have' relationship, which includes GT and GQ for each Sample-SNP relationship).</p>
+        <p>Queries have been designed to retrieve one kind of information when you have knowledge of the other. If you have a SNP of interest and would like to know the genes it may affect, then use Search by SNP. If you have a gene and would like to know what SNPs may affect it and what populations have those SNPs, then use Search by Gene. If you have a region of interest and would like the see the SNPs or the Genes that are in that region, then Search by Region. If you would like to perform a query outside of the capabilities of the Search by Region/Gene/SNP queries, then use the Advanced Search option.</p>
         <p style="font-weight:600;">Database Diagram:</p>
         <img src="https://bioed.bu.edu/images/students_21/group_proj/group_C/ERdiagram.png"/>
       </div>
@@ -49,7 +49,7 @@
         <p>Region queries are used to search a particular genomic region. They require a chromosome, and a start and stop position.</p>
         <p style="font-weight:600;">The Information Returned Includes:</p>
         <p>-All of the SNPs found in the region, with their position and alleles</p>
-        <p>-All of the genomic features found in the regions, with their position, type (gene,mRNA,etc.), name and symbol</p>
+        <p>-All of the genomic features found in the regions, with their position, type (gene, mRNA, etc.), name and symbol</p>
         <p style="font-weight:600;">Example Query:</p>
         <p>Chromosome = 3, Start position = 11136300, End position = 11136400</p>
       </div>
@@ -57,7 +57,7 @@
     <div class='info_block'>
       <h3>Search by Gene</h3>
       <div class='p'>
-        <p>Gene queries are used to find any genetic variants (SNPs) that may be effecting a genomic gene or feature of interest. Gene search requires selecting whether you are searching a gene name or symbol, and the name/symbol of the feature. Gene search will also take partial matches to gene names (such as Trypsin from the exampe). If multiple genes match the partial name, information from all of the genes will be returned.</p>
+        <p>Gene queries are used to find any genetic variants (SNPs) that may be affecting a genomic gene or feature of interest. Gene search requires selecting whether you are searching a gene name or symbol, and the name/symbol of the feature. Gene search will also take partial matches to gene names (such as Trypsin from the exampe). If multiple genes match the partial name, information from all of the genes will be returned.</p>
         <p style="font-weight:600;">The Information Returned Includes:</p>
         <p>-All of the SNPs found in the feature of interest, with their position, putative effect, impact, and alternate allele frequency in each population</p>
         <p>-All of the GO terms related to the searched feature</p>
@@ -69,10 +69,10 @@
     <div class='info_block'>
       <h3>Search by SNP</h3>
       <div class='p'>
-        <p>SNP queries are used to find genes or genomic features that may be effected by a SNP of interest. It requires the chromosome and position of the SNP.</p>
+        <p>SNP queries are used to find genes or genomic features that may be affected by a SNP of interest. It requires the chromosome and position of the SNP.</p>
         <p style="font-weight:600;">The Information Returned Includes:</p>
         <p>-The information for that SNP, with reference and alternate alleles, putative effect, and the impact of that effect</p>
-        <p>-The genomic features that could be effecte by that SNP</p>
+        <p>-The genomic features that could be affected by that SNP</p>
         <p>-The GO terms associated with those features</p>
         <p>-The alternate allele frequency calculated from all samples for each population</p>
         <p style="font-weight:600;">Example Query:</p>
@@ -82,11 +82,11 @@
     <div class='info_block'>
       <h3>Advanced Search</h3>
       <div class='p'>
-        <p>Advanced search is to be used if you need some information from the database that can't be obtained through the Region, Gene, or SNP queries. It allows users to make any query they wish by taking a query written in MySQL syntax and input and retuning all informating from that query in table format. The database's tables can been seen in the diagram above, or in the diagram pop-up window in the Advanced Search tab.</p>
+        <p>Advanced search is to be used if you need some information from the database that can't be obtained through the Region, Gene, or SNP queries. It allows users to make any search they wish by taking a query written in MySQL syntax as input and returning all information from that query in table format. The database's tables can been seen in the diagram above, or in the diagram or table pop-up windows in the Advanced Search tab.</p>
         <p>More information on how to compose MySQL queries can be found <a href="https://dev.mysql.com/doc/refman/8.0/en/entering-queries.html">here</a> or <a href="https://dev.mysql.com/doc/mysql-tutorial-excerpt/8.0/en/examples.html">here.</a></p>
         <p style="font-weight:600;">Example Queries:</p>
-        <p>'select * from population' would return all populations in the database</p>
-        <p>'select reference.chromosome, reference.position, impact from reference join snp using(rpid) join snpeffect using(snpid) where impact in ('HIGH','MODERATE’) group by snpid' would return all of the SNPs with a high or moderate impact</p>
+        <p>"select * from population" would return all populations in the database</p>
+        <p>"select reference.chromosome, reference.position, impact from reference join snp using(rpid) join snpeffect using(snpid) where impact in ('HIGH','MODERATE’) group by snpid" would return all of the SNPs with a high or moderate impact</p>
       </div>
     </div>
   </div>
