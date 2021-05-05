@@ -301,7 +301,20 @@ if form:
         print("<div style='overflow-x: scroll;'>")
         print('<table>')
         print_head(genelist_temp_df)
-        print_data(genelist_temp_df)
+        for index, row in genelist_temp_df.iterrows():
+            table_row = "<tr>"
+            if row[3] == 'gene':
+                for i, value in enumerate(row):
+                    if i == 5:
+                        table_row = table_row + "<td><a href='https://www.ncbi.nlm.nih.gov/search/all/?term=%s&ac=no&sp=r'>%s</a></td>" % (value, value)
+                    else:
+                        table_row = table_row + "<td>%s</td>" % value
+            else:
+                for value in row:
+                    value = str(value)
+                    table_row = table_row + "<td>%s</td>" % value
+            table_row = table_row + "</tr>"
+            print(table_row)
         print('</table>')
         print('</div>')
 
